@@ -297,7 +297,9 @@ abstract class AbstractRequest
         if (count($this->data)) {
 
             $url .= false === strpos($url, '?') ? '?' : '&';
-            $url .= http_build_query($this->data);
+            if (is_array($this->data)) {
+                $url .= http_build_query($this->data);
+            }
         }
 
         return $url;
@@ -315,18 +317,21 @@ abstract class AbstractRequest
         if (in_array($this->getMethod(), array(RequestInterface::METHOD_GET, RequestInterface::METHOD_HEAD))) {
             return '';
         }
-
-        return http_build_query($this->getRequestData());
+        if (is_array($this->data)) {
+            return http_build_query($this->getRequestData());
+        }else {
+            return $this->getRequestData();
+        }
     }
 
     /**
      * Set request data
      *
      * @access public
-     * @param  array                                  $data
+     * @param  mix                                  $data
      * @return \JonnyW\PhantomJs\Http\AbstractRequest
      */
-    public function setRequestData(array $data)
+    public function setRequestData($data)
     {
         $this->data = $data;
 
@@ -342,7 +347,7 @@ abstract class AbstractRequest
      */
     public function getRequestData($flat = true)
     {
-        if ($flat) {
+        if ($flat && is_array($this->data)) {
             return $this->flattenData($this->data);
         }
 

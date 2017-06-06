@@ -138,9 +138,9 @@ interface RequestInterface
      * Set request data
      *
      * @access public
-     * @param array $data
+     * @param mix $data
      */
-    public function setRequestData(array $data);
+    public function setRequestData($data);
 
     /**
      * Get request data
